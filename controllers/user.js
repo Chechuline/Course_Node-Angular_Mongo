@@ -52,7 +52,40 @@ function saveUser(req,res){
 
 }
 
+function loginUser(req,res){
+    var params=req.body;
+
+    var email=params.email;
+    var pass=params.password;
+    User.findOne({email: email.toLowerCase()}, (error,user)=>{
+        if(error){
+            res.status(500).send({message: "Error en la peticion"});
+        }else{
+            if(!user) {
+                res.status(404).send({message: "usuario no existe"});
+            }else{
+                //comprobamos contraseña
+                bCrypt.compare(pass,user.password, (error,check)=>{
+                    //Devuelve contraseña de manera incorrecta, comprobar metodo compare
+                    debugger;;
+                    if(!check){
+                        if(params.gethash){
+                            //TODO
+                            //devolver token jwt
+                        }else{
+                            res.status(200).send({user});
+                        }
+                    } else {
+                        res.status(404).send({message: "usuario no pudo loguear"});
+                    }
+                });
+            }
+        }
+    });
+}
+
 module.exports={
     pruebas,
-    saveUser
+    saveUser,
+    loginUser
 }

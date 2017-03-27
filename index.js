@@ -13,7 +13,7 @@ mongoose.connect('mongodb://localhost:27017/curso_node_angular', (err,resp)=>{
         console.log("conectado");
 
         app.listen(port, function(){
-            console.log("servidor api REST escuchando en localhost:"+port);
+            console.log("servidor api REST escuchando en http://localhost:"+port);
         });
         
     }
