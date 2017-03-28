@@ -4,6 +4,7 @@
 */
 var User=require('../models/usuario');
 var bCrypt=require('bcrypt-nodejs');//encripta
+var jwt=require('../services/jwt');
 
 function pruebas(req,res){
     res.status(200).send({
@@ -49,6 +50,7 @@ function saveUser(req,res){
 
 }
 
+//comprueba que el usuario existe y es correcto
 function loginUser(req,res){
     var params=req.body;
 
@@ -69,9 +71,12 @@ function loginUser(req,res){
                     }else{
                        if(result){
                             if(params.gethash){
-                                //TODO
                                 //devolver token jwt
+                                res.status(200).send({
+                                    token: jwt.createToken(user)
+                                });
                             }else{
+                                //devuelve usuario
                                 res.status(200).send({user});
                             }
                         } else {
