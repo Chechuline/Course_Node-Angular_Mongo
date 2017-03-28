@@ -15,8 +15,6 @@ function pruebas(req,res){
 function saveUser(req,res){
     var user=new User();
     var params=req.body;
-    
-    console.log(params);
 
     user.name=params.name;
     user.surname=params.surname;
@@ -41,7 +39,6 @@ function saveUser(req,res){
                         }
                     }
                 });
-
             }else{
                 res.status(200).send({message: "Introduce todos los campos"});
             }
@@ -65,18 +62,21 @@ function loginUser(req,res){
                 res.status(404).send({message: "usuario no existe"});
             }else{
                 //comprobamos contraseña
-                bCrypt.compare(pass,user.password, (error,check)=>{
+                bCrypt.compare(pass, user.passwd, function(error,result){
                     //Devuelve contraseña de manera incorrecta, comprobar metodo compare
-                    debugger;;
-                    if(!check){
-                        if(params.gethash){
-                            //TODO
-                            //devolver token jwt
-                        }else{
-                            res.status(200).send({user});
+                    if(error){
+                         res.status(404).send({message: error});
+                    }else{
+                       if(result){
+                            if(params.gethash){
+                                //TODO
+                                //devolver token jwt
+                            }else{
+                                res.status(200).send({user});
+                            }
+                        } else {
+                            res.status(404).send({message: "usuario no pudo loguear"});
                         }
-                    } else {
-                        res.status(404).send({message: "usuario no pudo loguear"});
                     }
                 });
             }
