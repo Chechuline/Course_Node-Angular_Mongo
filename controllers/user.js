@@ -8,7 +8,7 @@ var jwt=require('../services/jwt');
 
 function pruebas(req,res){
     res.status(200).send({
-        mensaje: "probando controlador usuario"
+        mensaje: "probando controlador usuario para la aplicacion de mongo y node"
     });
 }
 
@@ -47,7 +47,6 @@ function saveUser(req,res){
     }else{
         res.status(500).send({message: "introduce contraseña"});
     }
-
 }
 
 //comprueba que el usuario existe y es correcto
