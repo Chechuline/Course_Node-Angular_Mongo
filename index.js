@@ -6,7 +6,7 @@ var port=process.env.port || 3977;
 
 
 
-
+//conexion a BBDD
 mongoose.connect('mongodb://localhost:27017/curso_node_angular', (err,resp)=>{
     if(err) throw err
     else {

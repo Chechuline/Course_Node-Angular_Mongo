@@ -6,13 +6,14 @@ var User=require('../models/usuario');
 var bCrypt=require('bcrypt-nodejs');//encripta
 var jwt=require('../services/jwt');
 
+//prueba
 function pruebas(req,res){
     res.status(200).send({
         mensaje: "probando controlador usuario para la aplicacion de mongo y node"
     });
 }
 
-
+//almacena los datos de usuario
 function saveUser(req,res){
     var user=new User();
     var params=req.body;
@@ -88,8 +89,13 @@ function loginUser(req,res){
     });
 }
 
+function updateUser(req,res){
+    
+}
+
 module.exports={
     pruebas,
     saveUser,
-    loginUser
+    loginUser,
+    updateUser
 }
