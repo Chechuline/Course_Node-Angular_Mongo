@@ -91,11 +91,55 @@ function loginUser(req,res){
 
 function updateUser(req,res){
     
+    var userId=req.params.id;
+    var update= req.body;
+
+    User.findByIdAndUpdate(userId, update,function(error,userUpdated){
+        if(error){
+            res.status(500).send({message: "error al actualizar el usuario"});
+        }else{
+            if(!userUpdated){
+                res.status(404).send({message: "no se pudo actualziar el usuario"});
+            }else{
+                res.status(200).send({userUpdated});
+            }
+        }
+    });
 }
 
+function uploadImage(req,res){
+    var userId=req.params.id;
+    var fileName='no subido';
+    var files=req.files;
+    if(req.files){
+        var filePath=req.files.image.path;
+        var file_split=filePath.split('\\');
+        fileName=file_split[2];
+
+        var ext_split= fileName.split('\.');
+        var ext=ext_split[1];
+
+        if(ext=='png' || ext=='jpg' || ext=="gif"){
+            User.findByIdAndUpdate(userId,{image: fileName},(err,userUpdated)=>{
+                if(!userUpdated){
+                    res.status(404).send({message: "no se pudo actualziar el usuario"});
+                }else{
+                    res.status(200).send({userUpdated});
+                }
+            });
+            //console.log(filePath);
+        }else{
+            res.status(200).send({ message: "extension no valida"});
+        }
+        
+    }else{
+        res.status(404).send({ message: "imagen no subida"});
+    }
+}
 module.exports={
     pruebas,
     saveUser,
     loginUser,
-    updateUser
+    updateUser, 
+    uploadImage
 }
