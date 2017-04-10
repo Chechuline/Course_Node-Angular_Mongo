@@ -7,7 +7,6 @@ var app=express();
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-
 var userRoutes = require('./routes/user');
 
 
@@ -15,7 +14,7 @@ var userRoutes = require('./routes/user');
 
 //rutas base
 app.use('/api', userRoutes);
-
+//app.use(userRoutes);
 
 // app.get("/pruebas",function(req,resp){
 //     resp.status(200).send({message: "zona de pruebas"});

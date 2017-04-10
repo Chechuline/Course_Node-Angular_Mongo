@@ -4,19 +4,19 @@
 */
 var User=require('../models/usuario');
 var bCrypt=require('bcrypt-nodejs');//encripta
+var jwt=require('../services/jwt');
 
+//prueba
 function pruebas(req,res){
     res.status(200).send({
-        mensaje: "probando controlador usuario"
+        mensaje: "probando controlador usuario para la aplicacion de mongo y node"
     });
 }
 
-
+//almacena los datos de usuario
 function saveUser(req,res){
     var user=new User();
     var params=req.body;
-    
-    console.log(params);
 
     user.name=params.name;
     user.surname=params.surname;
@@ -41,7 +41,6 @@ function saveUser(req,res){
                         }
                     }
                 });
-
             }else{
                 res.status(200).send({message: "Introduce todos los campos"});
             }
@@ -49,10 +48,54 @@ function saveUser(req,res){
     }else{
         res.status(500).send({message: "introduce contraseña"});
     }
+}
 
+//comprueba que el usuario existe y es correcto
+function loginUser(req,res){
+    var params=req.body;
+
+    var email=params.email;
+    var pass=params.password;
+    User.findOne({email: email.toLowerCase()}, (error,user)=>{
+        if(error){
+            res.status(500).send({message: "Error en la peticion"});
+        }else{
+            if(!user) {
+                res.status(404).send({message: "usuario no existe"});
+            }else{
+                //comprobamos contraseña
+                bCrypt.compare(pass, user.passwd, function(error,result){
+                    //Devuelve contraseña de manera incorrecta, comprobar metodo compare
+                    if(error){
+                         res.status(404).send({message: error});
+                    }else{
+                       if(result){
+                            if(params.gethash){
+                                //devolver token jwt
+                                res.status(200).send({
+                                    token: jwt.createToken(user)
+                                });
+                            }else{
+                                //devuelve usuario
+                                res.status(200).send({user});
+                            }
+                        } else {
+                            res.status(404).send({message: "usuario no pudo loguear"});
+                        }
+                    }
+                });
+            }
+        }
+    });
+}
+
+function updateUser(req,res){
+    
 }
 
 module.exports={
     pruebas,
-    saveUser
+    saveUser,
+    loginUser,
+    updateUser
 }

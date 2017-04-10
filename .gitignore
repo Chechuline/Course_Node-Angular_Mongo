@@ -1,4 +1,5 @@
 node_modules/
+settings.json
 
 # Windows image file caches
 Thumbs.db
