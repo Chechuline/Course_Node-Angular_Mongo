@@ -5,6 +5,8 @@
 var User=require('../models/usuario');
 var bCrypt=require('bcrypt-nodejs');//encripta
 var jwt=require('../services/jwt');
+var fs=require("fs");
+var path=require("path");
 
 //prueba
 function pruebas(req,res){
@@ -94,7 +96,7 @@ function updateUser(req,res){
     var userId=req.params.id;
     var update= req.body;
 
-    User.findByIdAndUpdate(userId, update,function(error,userUpdated){
+    User.findByIdAndUpdate(userId, update, function(error,userUpdated){
         if(error){
             res.status(500).send({message: "error al actualizar el usuario"});
         }else{
@@ -124,22 +126,36 @@ function uploadImage(req,res){
                 if(!userUpdated){
                     res.status(404).send({message: "no se pudo actualziar el usuario"});
                 }else{
-                    res.status(200).send({userUpdated});
+                    res.status(200).send({image: fileName,user: userUpdated});
                 }
             });
-            //console.log(filePath);
         }else{
             res.status(200).send({ message: "extension no valida"});
         }
-        
     }else{
         res.status(404).send({ message: "imagen no subida"});
     }
 }
+
+function getImageFile(req,res){
+    var imagefile=req.params.imageFile;
+    var pathFile='./upload/users/'+imagefile
+
+    fs.exists(pathFile, function(exists){
+        if(exists){
+            res.sendFile(path.resolve(pathFile));
+        }else{
+            res.status(200).send({ message: "imagen no existe"});
+        }
+    });
+
+}
+
 module.exports={
     pruebas,
     saveUser,
     loginUser,
     updateUser, 
-    uploadImage
+    uploadImage,
+    getImageFile
 }

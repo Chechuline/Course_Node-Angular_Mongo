@@ -4,16 +4,27 @@ var express=require('express');
 var bodyParser=require('body-parser');
 var app=express();
 //cargar rutas
+var userRoutes = require('./routes/user');
+
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-var userRoutes = require('./routes/user');
+
 
 
 //configurar cabeceras http
+app.use((req,res,next)=>{
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,OPTION,PUT,DELETE');
+    res.header('Allow','GET,POST,OPTION,PUT,DELETE');
+
+    next();
+})
 
 //rutas base
 app.use('/api', userRoutes);
+
 //app.use(userRoutes);
 
 // app.get("/pruebas",function(req,resp){
